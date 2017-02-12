@@ -1,0 +1,57 @@
+{
+    // Use IntelliSense to learn about possible Node.js debug attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "args": [
+                "-p", "./sample",
+                "-l", "silly",
+                "./sample"
+            ],
+            "cwd": "${workspaceRoot}",
+            "env": {
+                "NODE_ENV": "development",
+                "DEBUG":"azure-functions-pack:*"
+            },
+            "name": "DEBUG",
+            "outFiles": [
+                "${workspaceRoot}/lib/**"
+            ],
+            "preLaunchTask": "build",
+            "program": "${workspaceRoot}/src/main.ts",
+            "request": "launch",
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "runtimeExecutable": null,
+            "sourceMaps": true,
+            "stopOnEntry": false,
+            "type": "node"
+        },
+        {
+            "args": [
+                "-p", "./sample",
+                "./sample"
+            ],
+            "cwd": "${workspaceRoot}",
+            "env": {
+            },
+            "name": "PRODUCTION",
+            "outFiles": [
+                "${workspaceRoot}/lib/**"
+            ],
+            "preLaunchTask": "build",
+            "program": "${workspaceRoot}/src/main.ts",
+            "request": "launch",
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "runtimeExecutable": null,
+            "sourceMaps": true,
+            "stopOnEntry": false,
+            "type": "node"
+        }
+    ]
+}
