@@ -9,7 +9,7 @@ WARNING: This requires host version `1.0.10726.0` or higher.
 ## How to run
 
 ```
-npm install -g christopheranderson/azure-functions-pack
+npm install -g azure-functions-pack
 funcpack
 ```
 
