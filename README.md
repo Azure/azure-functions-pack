@@ -4,35 +4,61 @@ This is a tool to make it easy to package your Azure Functions Node.js Functions
 
 :construction: This project is experimental; use with caution and be prepared for breaking changes :construction:
 
-WARNING: This requires host version `1.0.10726.0` or higher.
-
 ## How to run
 
 ```
 npm install -g azure-functions-pack
-funcpack
+funcpack pack ./
 ```
 
 You can then test locally using the CLI tool: `func run <myfunc>`
 
+When uploading your files, you need to include your `package.json`, but you don't need your `node_modules` directory.
+
 ## API
 
 ```
-  Usage: funcpack [options]
+Usage: main [options] [command]
+
+
+  Commands:
+
+    unpack [options] <path>  Will remove all traces of packing tool at the specified path or the current directory if none is specified
+    pack [options] <path>    Will pack the specified path or the current directory if none is specified
 
   Options:
 
-    -h, --help         output usage information
-    -V, --version      output the version number
-    -d, --debug        Emits debug messages
-    -p, --path <path>  Path to root of Function App
+    -h, --help     output usage information
+    -V, --version  output the version number
+    -d, --debug    Emits debug messages
 ```
 
-You can pass the path to the root of your project via:
+### unpack
 
-0. Using the `-p` command: `funcpack -p ./pathToFunctionApp`
-1. Just a normal argument: `funcpack ./pathToFunctionApp`
-2. Run in the same directory: `cd ./pathToFunctionApp && funcpack`
+```
+Usage: unpack [options] <path>
+
+  Will remove all traces of packing tool at the specified path or the current directory if none is specified
+
+  Options:
+
+    -h, --help           output usage information
+    -o, --output <path>  Path for output directory
+```
+
+### pack
+
+```
+Usage: pack [options] <path>
+
+  Will pack the specified path or the current directory if none is specified
+
+  Options:
+
+    -h, --help           output usage information
+    -u, --uglify         Uglify the project when webpacking
+    -o, --output <path>  Path for output directory
+```
 
 ## License
 
