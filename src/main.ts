@@ -3,34 +3,98 @@
 import * as program from "commander";
 import * as path from "path";
 import * as winston from "winston";
-import { PackhostGenerator, WebpackRunner } from "./";
+import { PackhostGenerator, Unpacker, WebpackRunner } from "./";
 
 async function runCli() {
     const p = program
-        .version("0.0.1")
-        .option("-d, --debug", "Emits debug messages")
-        .option("-p, --path <path>", "Path to root of Function App");
+        .version("0.0.4")
+        .option("-d, --debug", "Emits debug messages");
+
+    p.command("unpack <path>")
+        .description("Will remove all traces of packing tool at the specified "
+                   + "path or the current directory if none is specified")
+        .option("-o, --output <path>", "Path for output directory")
+        .action(unpack);
+
+    p.command("pack <path>")
+        .description("Will pack the specified path or the current directory if none is specified")
+        .option("-u, --uglify", "Uglify the project when webpacking")
+        .option("-o, --output <path>", "Path for output directory")
+        .action(pack);
+
     p.parse(process.argv);
 
+}
+
+async function unpack(name: string) {
     if (program.opts().debug) {
-        process.env.DEBUG = process.env.DEBUG ?
-            process.env.DEBUG + ",azure-functions-pack:*" : "azure-functions-pack:*";
-    }
+            process.env.DEBUG = "*";
+        }
 
     // Grab the route either from the option, the argument (if there is only 1)
-    let pathToRoot = "";
+    let projectRootPath = "";
     try {
-        pathToRoot = program.opts().path ?
-            path.join(process.cwd(), program.opts().path) :
-            (program.args.length === 1 ? program.args[0] : process.cwd());
+        projectRootPath = name ?
+            path.resolve(process.cwd(), name) : process.cwd();
     } catch (error) {
         winston.error(error);
         throw new Error("Could not determine route");
     }
 
+    let outputPath = ".funcpack";
+    try {
+        if (program.opts().path) {
+            outputPath = program.opts().path;
+        }
+    } catch (e) {
+        winston.error(e);
+        throw new Error("Could not parse the uglify option");
+    }
+
+    winston.info("Unpacking project at: " + projectRootPath);
+    await Unpacker.unpack({ projectRootPath, outputPath });
+    winston.info("Complete!");
+    //process.exit(0);
+}
+
+async function pack(name: string) {
+    if (program.opts().debug) {
+        process.env.DEBUG = "*";
+    }
+
+    // Grab the route either from the option, the argument (if there is only 1)
+    let projectRootPath = "";
+    try {
+        projectRootPath = name ?
+            path.join(process.cwd(), name) : process.cwd();
+    } catch (error) {
+        winston.error(error);
+        throw new Error("Could not determine route");
+    }
+
+    let uglify = false;
+    try {
+        if (program.opts().uglify) {
+            uglify = true;
+        }
+    } catch (e) {
+        winston.error(e);
+        throw new Error("Could not parse the uglify option");
+    }
+
+    let outputPath = ".funcpack";
+    try {
+        if (program.opts().path) {
+            outputPath = program.opts().path;
+        }
+    } catch (e) {
+        winston.error(e);
+        throw new Error("Could not parse the uglify option");
+    }
+
     // Create new generator object with settings
     const generator = new PackhostGenerator({
-        projectRootPath: pathToRoot,
+        projectRootPath,
     });
 
     // Attempt to generate the project
@@ -44,10 +108,12 @@ async function runCli() {
 
     // Webpack
     try {
-    winston.info("Webpacking project");
-    await WebpackRunner.run({
-        projectRootPath: pathToRoot,
-    });
+        winston.info("Webpacking project");
+        await WebpackRunner.run({
+            projectRootPath,
+            uglify,
+            outputPath,
+        });
     } catch (error) {
         winston.error(error);
         throw new Error("Could not webpack project");
