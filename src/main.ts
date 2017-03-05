@@ -12,7 +12,7 @@ async function runCli() {
 
     p.command("unpack <path>")
         .description("Will remove all traces of packing tool at the specified "
-                   + "path or the current directory if none is specified")
+        + "path or the current directory if none is specified")
         .option("-o, --output <path>", "Path for output directory")
         .action(unpack);
 
@@ -22,14 +22,23 @@ async function runCli() {
         .option("-o, --output <path>", "Path for output directory")
         .action(pack);
 
+    p.command("*", null, { noHelp: true, isDefault: true })
+        .action(() => {
+            p.help();
+        });
+
     p.parse(process.argv);
+
+    if (!process.argv.slice(2).length) {
+        p.help();
+    }
 
 }
 
-async function unpack(name: string) {
-    if (program.opts().debug) {
-            process.env.DEBUG = "*";
-        }
+async function unpack(name: string, options: any) {
+    if (options.debug) {
+        process.env.DEBUG = "*";
+    }
 
     // Grab the route either from the option, the argument (if there is only 1)
     let projectRootPath = "";
@@ -43,7 +52,7 @@ async function unpack(name: string) {
 
     let outputPath = ".funcpack";
     try {
-        if (program.opts().path) {
+        if (options.path) {
             outputPath = program.opts().path;
         }
     } catch (e) {
@@ -54,11 +63,10 @@ async function unpack(name: string) {
     winston.info("Unpacking project at: " + projectRootPath);
     await Unpacker.unpack({ projectRootPath, outputPath });
     winston.info("Complete!");
-    //process.exit(0);
 }
 
-async function pack(name: string) {
-    if (program.opts().debug) {
+async function pack(name: string, options: any) {
+    if (options.debug) {
         process.env.DEBUG = "*";
     }
 
@@ -74,7 +82,7 @@ async function pack(name: string) {
 
     let uglify = false;
     try {
-        if (program.opts().uglify) {
+        if (options.uglify) {
             uglify = true;
         }
     } catch (e) {
@@ -84,7 +92,7 @@ async function pack(name: string) {
 
     let outputPath = ".funcpack";
     try {
-        if (program.opts().path) {
+        if (options.path) {
             outputPath = program.opts().path;
         }
     } catch (e) {
