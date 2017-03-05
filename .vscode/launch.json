@@ -93,6 +93,27 @@
             "sourceMaps": true,
             "stopOnEntry": false,
             "type": "node"
+        },
+        {
+            "args": [
+                "pack","./sample2","-u"
+            ],
+            "cwd": "${workspaceRoot}",
+            "env": {
+            },
+            "name": "Pack uglify",
+            "outFiles": [
+                "${workspaceRoot}/lib/**"
+            ],
+            "program": "${workspaceRoot}/src/main.ts",
+            "request": "launch",
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "runtimeExecutable": null,
+            "sourceMaps": true,
+            "stopOnEntry": false,
+            "type": "node"
         }
     ]
 }
