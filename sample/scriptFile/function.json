@@ -13,8 +13,5 @@
    "name": "$return"
   }
  ],
- "originalEntryPoint": false,
- "originalScriptFile": "index.js",
- "scriptFile": "../.funcpack/index.js",
- "entryPoint": "todo"
+ "scriptFile": "./usemeinstead.js"
 }

@@ -50,11 +50,11 @@ export class PackhostGenerator {
         const fxJson = await FileHelper.readFileAsJSON(fxJsonPath);
 
         // TODO: Have to overwite this scriptFile setting later on. Having to use temporary setting right now.
-        if (fxJson.originalScriptFile === null) {
-            debug("Found originalScriptFile setting: %s", fxJson.originalScriptFile);
-            scriptFile = fxJson.originalScriptFile;
-            originalScriptFile = fxJson.originalScriptFile;
-        } else if (fxJson.scriptFile && !fxJson.originalScriptFile) {
+        if (fxJson._originalScriptFile) {
+            debug("Found originalScriptFile setting: %s", fxJson._originalScriptFile);
+            scriptFile = fxJson._originalScriptFile;
+            originalScriptFile = fxJson._originalScriptFile;
+        } else if (fxJson.scriptFile && !fxJson._originalScriptFile) {
             scriptFile = fxJson.scriptFile;
             originalScriptFile = fxJson.scriptFile;
         } else {
@@ -70,20 +70,20 @@ export class PackhostGenerator {
                 debug("Function %s does not have a valid start file", name, {
                     directory: dir,
                 });
-                throw new Error(`Function {name} does not have a valid start file`);
+                throw new Error(`Function ${name} does not have a valid start file`);
             }
             originalScriptFile = scriptFile;
         }
 
          // TODO: improve the logic for choosing entry point - failure sure not all scenarios are covered here.
          // TODO: Have to overwrite this entryPoint later on. Using temporary setting for now.
-        if (fxJson.originalEntryPoint) {
-            debug("Found originalEntryPoint setting: %s", fxJson.originalEntryPoint);
-            entryPoint = fxJson.originalEntryPoint;
-            originalEntryPoint = fxJson.originalEntryPoint;
-        } else if (fxJson.entryPoint && fxJson.originalEntryPoint !== false) {
+        if (fxJson._originalEntryPoint) {
+            debug("Found originalEntryPoint setting: %s", fxJson._originalEntryPoint);
+            entryPoint = fxJson._originalEntryPoint;
+            originalEntryPoint = fxJson._originalEntryPoint;
+        } else if (fxJson.entryPoint && fxJson._originalEntryPoint !== false) {
             entryPoint = fxJson.entryPoint;
-            originalEntryPoint = fxJson.entry;
+            originalEntryPoint = fxJson.entryPoint;
         }
 
         debug("Loaded function(%s) using entryPoint: %s - scriptFile: %s", name, scriptFile, entryPoint);
@@ -91,8 +91,8 @@ export class PackhostGenerator {
             name,
             scriptFile,
             entryPoint,
-            originalEntryPoint,
-            originalScriptFile,
+            _originalEntryPoint: originalEntryPoint,
+            _originalScriptFile: originalScriptFile,
         });
     }
 
@@ -113,7 +113,7 @@ export class PackhostGenerator {
 
         for (const [name, fx] of this.functionsMap) {
             const fxvar = this.safeFunctionName(fx.name);
-            let exportStmt = `    "${fxvar}": require("../${fx.name}/${fx.originalScriptFile}")`;
+            let exportStmt = `    "${fxvar}": require("../${fx.name}/${fx._originalScriptFile}")`;
             if (fx.entryPoint) {
                 exportStmt += `.${fx.entryPoint}`;
             }
@@ -140,8 +140,8 @@ export class PackhostGenerator {
             const fxJson = await FileHelper.readFileAsJSON(fxJsonPath);
 
             // TODO: This way of keeping track of the original settings is hacky
-            fxJson.originalEntryPoint = fx.originalEntryPoint;
-            fxJson.originalScriptFile = fx.originalScriptFile;
+            fxJson._originalEntryPoint = fx._originalEntryPoint;
+            fxJson._originalScriptFile = fx._originalScriptFile;
             fxJson.scriptFile = `../${this.options.outputPath}/${this.options.indexFileName}`;
             fxJson.entryPoint = fxvar;
             await FileHelper.overwriteFileUtf8(fxJsonPath, JSON.stringify(fxJson, null, " "));
@@ -164,6 +164,6 @@ export interface IFxFunction {
     name: string;
     entryPoint: string;
     scriptFile: string;
-    originalEntryPoint: string | boolean;
-    originalScriptFile: string | boolean;
+    _originalEntryPoint: string | boolean;
+    _originalScriptFile: string | boolean;
 }

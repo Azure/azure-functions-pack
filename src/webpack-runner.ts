@@ -6,19 +6,28 @@ import { FileHelper } from "./utils";
 
 const debug = debugLib("azure-functions-pack:WebpackRunner");
 
+export interface IWebpackRunner {
+    projectRootPath: string;
+    indexFileName?: string;
+    outputPath?: string;
+    uglify?: boolean;
+}
+
 export class WebpackRunner {
-    public static run(options: IPackhostGeneratorOptions): Promise<any> {
+    public static run(options: IWebpackRunner): Promise<any> {
         options.indexFileName = options.indexFileName || "index.js";
         options.outputPath = options.outputPath || ".funcpack";
+        options.uglify = options.uglify || false;
 
         return new Promise(async (resolve, reject) => {
-
+            debug("Setting up paths");
             const oldPath = path.join(options.projectRootPath, options.outputPath, options.indexFileName);
             const newPath = path.join(options.projectRootPath,
-                                          options.outputPath, "original." + options.indexFileName);
+                options.outputPath, "original." + options.indexFileName);
 
             const outputPath = path.join(options.projectRootPath, options.outputPath, "output.js");
 
+            debug("Creating Webpack Configuration");
             const config: webpack.Configuration = {
                 entry: oldPath,
                 node: {
@@ -31,9 +40,20 @@ export class WebpackRunner {
                     libraryTarget: "commonjs2",
                     path: path.join(options.projectRootPath, options.outputPath),
                 },
+                plugins: [],
                 target: "node",
             };
 
+            if (options.uglify) {
+                debug("Adding uglify plugin");
+                try {
+                    config.plugins.push(new webpack.optimize.UglifyJsPlugin());
+                } catch (e) {
+                    debug(e);
+                }
+            }
+
+            debug("Creating Webpack instance");
             const compiler = webpack(config);
             debug("Started webpack");
             compiler.run(async (err, stats) => {
