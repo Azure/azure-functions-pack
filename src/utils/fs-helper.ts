@@ -44,7 +44,7 @@ export class FileHelper {
     }
 
     public static readFileAsJSON(path: string): Promise<any> {
-        return new Promise<Object>(async (resolve, reject) => {
+        return new Promise<any>(async (resolve, reject) => {
             try {
                 const content = await FileHelper.readFileUtf8(path);
                 resolve(JSON.parse(content));
