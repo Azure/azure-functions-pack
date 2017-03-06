@@ -11,6 +11,7 @@ const good = function (context, req) {
 const bad = function (context, req) {
     context.log('"entryPoint.bad" function called');
     const res = {
+        status:400,
         body: {
             "success":false
         }
