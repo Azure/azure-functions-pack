@@ -7,7 +7,7 @@ import { PackhostGenerator, Unpacker, WebpackRunner } from "./";
 
 async function runCli() {
     const p = program
-        .version("0.1.0")
+        .version("0.1.2")
         .option("-d, --debug", "Emits debug messages");
 
     p.command("unpack <path>")
