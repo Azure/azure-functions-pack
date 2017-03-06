@@ -21,11 +21,20 @@ export class PackhostGenerator {
     // TODO: Should probably replace this whole class with a bunch of static methods. Don't need a class.
     public async updateProject() {
         debug("Starting update of Project");
+        await this.throwIfInFunction();
         await this.load();
         await this.createOutputDirectory();
         await this.createHostFile();
         await this.updateFunctionJSONs();
         debug("Completed update of project");
+    }
+
+    private async throwIfInFunction() {
+        debug("Checking if we're in a function");
+        if (await FileHelper.exists(path.resolve(this.options.projectRootPath, "function.json"))) {
+            throw new Error("function.json detected: run this from "
+                + "the root of your Function App, not inside of a Function");
+        }
     }
 
     private async load() {
@@ -35,7 +44,10 @@ export class PackhostGenerator {
         debug("Found these directories in project root: %s", functions.join(", "));
         for (const item of functions) {
             if (await FileHelper.exists(path.resolve(this.options.projectRootPath, item, "function.json"))) {
-                this.functionsMap.set(item, await this.loadFunction(item));
+                const fn = await this.loadFunction(item);
+                if (fn !== null) {
+                    this.functionsMap.set(item, fn);
+                }
             }
         }
     }
@@ -54,9 +66,11 @@ export class PackhostGenerator {
             debug("Found originalScriptFile setting: %s", fxJson._originalScriptFile);
             scriptFile = fxJson._originalScriptFile;
             originalScriptFile = fxJson._originalScriptFile;
-        } else if (fxJson.scriptFile && !fxJson._originalScriptFile) {
+        } else if (fxJson.scriptFile && fxJson.scriptFile.endsWith(".js") && !fxJson._originalScriptFile) {
             scriptFile = fxJson.scriptFile;
             originalScriptFile = fxJson.scriptFile;
+        } else if (fxJson.scriptFile && !fxJson.scriptFile.endsWith(".js") && !fxJson._originalScriptFile) {
+            return null;
         } else {
             let dir: string[] = await FileHelper.readdir(path.resolve(this.options.projectRootPath, name));
             dir = dir.filter((f) => f.endsWith(".js"));
@@ -70,7 +84,8 @@ export class PackhostGenerator {
                 debug("Function %s does not have a valid start file", name, {
                     directory: dir,
                 });
-                throw new Error(`Function ${name} does not have a valid start file`);
+                return null;
+                //throw new Error(`Function ${name} does not have a valid start file`);
             }
             originalScriptFile = scriptFile;
         }
@@ -151,7 +166,6 @@ export class PackhostGenerator {
     private safeFunctionName(name: string): string {
         return name.replace("-", "$dash");
     }
-
 }
 
 export interface IPackhostGeneratorOptions {
