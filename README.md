@@ -14,6 +14,8 @@ A javascript module bundler (webpack) is used to place all the modules in a sing
 
 ## How to run
 
+In the Function App directory:
+
 ```
 npm install -g azure-functions-pack
 funcpack pack ./
@@ -21,7 +23,7 @@ funcpack pack ./
 
 You can then test locally using the CLI tool: `func run <myfunc>`
 
-When uploading your files, you need to include the single `.funcpack` directory (in the Functions App root), but you don't need your `node_modules` directory for each Function.
+When uploading your files, you need to include the single `.funcpack` directory (in the Functions App root), but you don't need your `node_modules` directory.
 
 ## API
 
