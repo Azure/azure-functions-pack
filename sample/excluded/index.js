@@ -1,4 +1,6 @@
-const chai = require('chai');
+if(false) { // never called
+    require('chai');
+}
 
 module.exports = function (context, req) {
     context.log('"simple" function called');
