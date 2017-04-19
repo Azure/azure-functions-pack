@@ -8,7 +8,7 @@ import { ConfigLoader, IFuncpackConfig } from "./utils";
 
 async function runCli() {
     const p = program
-        .version("0.2.0")
+        .version("0.2.2")
         .option("-d, --debug", "Emits debug messages");
 
     p.command("unpack <path>")
@@ -68,7 +68,11 @@ async function unpack(name: string, options: any) {
 
 async function pack(name: string, options: any) {
     // TBD - allow loadConfig to get a filename from options
-    const config: IFuncpackConfig = await ConfigLoader.loadConfig();
+    let config: IFuncpackConfig = await ConfigLoader.loadConfig();
+
+    config = config || {
+        ignoredModules: [],
+    };
 
     if (options.debug) {
         process.env.DEBUG = "*";
