@@ -8,6 +8,7 @@
 
     testOk $testName 'simple'
     testOk $testName 'entryPoint'
+    testOk $testName 'excluded'
     testOk $testName 'externalScriptFile'
     testOk $testName 'fs-ignoremeScriptFile'
     testOk $testName 'cs-ignoreme'
