@@ -74,6 +74,18 @@ Usage: pack [options] <path>
     -o, --output <path>  Path for output directory
 ```
 
+### funcpack.config.json
+
+Pack will optionally take in a config file that will let you further customize the behavior. The config file must be in the directory you run the command from and named `funcpack.config.json`.
+
+Here are all the supported options:
+
+```
+{
+  "ignoredModules":["chai"]
+}
+```
+
 ## License
 
 [MIT](LICENSE)
