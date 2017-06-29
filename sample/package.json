@@ -12,5 +12,8 @@
     "azure": "^1.2.0-preview",
     "lodash": "^4.17.4",
     "tedious": "^1.14.0"
+  },
+  "devDependencies": {
+    "chai":"3.5.0"
   }
 }
