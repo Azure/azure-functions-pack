@@ -11,6 +11,7 @@ export interface IWebpackRunner {
     indexFileName?: string;
     outputPath?: string;
     uglify?: boolean;
+    ignoredModules?: string[];
 }
 
 export class WebpackRunner {
@@ -18,6 +19,7 @@ export class WebpackRunner {
         options.indexFileName = options.indexFileName || "index.js";
         options.outputPath = options.outputPath || ".funcpack";
         options.uglify = options.uglify || false;
+        options.ignoredModules = options.ignoredModules || [];
 
         return new Promise(async (resolve, reject) => {
             debug("Setting up paths");
@@ -27,9 +29,16 @@ export class WebpackRunner {
 
             const outputPath = path.join(options.projectRootPath, options.outputPath, "output.js");
 
+            const ignoredModules: { [key: string]: string } = {};
+
+            for (const mod of options.ignoredModules) {
+                ignoredModules[mod.toLowerCase()] = mod;
+            }
+
             debug("Creating Webpack Configuration");
             const config: webpack.Configuration = {
                 entry: oldPath,
+                externals: ignoredModules,
                 node: {
                     __dirname: false,
                     __filename: false,
