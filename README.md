@@ -25,6 +25,10 @@ You can then test locally using the CLI tool: `func run <myfunc>`
 
 When uploading your files, you need to include the single `.funcpack` directory (in the Functions App root), but you don't need your `node_modules` directory.
 
+## Alternative when git deploying to Azure Functions
+
+You can set the `SCM_USE_FUNCPACK` app setting to 1, and we'll install your packages and pack them whenever you git deploy. We recommend git deploying into a deployment slot and then swapping to prod to avoid downtime and resource contention. You can learn more about how to customize deployments on the [kudu wiki](https://github.com/projectkudu/kudu/wiki/Configurable-settings#automatically-run-funcpack-on-function-app-git-deployments).
+
 ## API
 
 ```
