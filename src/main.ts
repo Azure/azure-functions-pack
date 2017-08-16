@@ -123,7 +123,6 @@ async function pack(name: string, options: any) {
         throw new Error("Could not generate project");
     }
 
-    winston.info(outputPath);
     // Webpack
     try {
         winston.info("Webpacking project");
