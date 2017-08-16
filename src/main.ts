@@ -53,12 +53,12 @@ async function unpack(name: string, options: any) {
 
     let outputPath = ".funcpack";
     try {
-        if (options.path) {
-            outputPath = program.opts().path;
+        if (options.output) {
+            outputPath = path.join(options.output, outputPath);
         }
     } catch (e) {
         winston.error(e);
-        throw new Error("Could not parse the uglify option");
+        throw new Error("Could not parse the output option");
     }
 
     winston.info("Unpacking project at: " + projectRootPath);
@@ -100,17 +100,18 @@ async function pack(name: string, options: any) {
 
     let outputPath = ".funcpack";
     try {
-        if (options.path) {
-            outputPath = program.opts().path;
+        if (options.output) {
+            outputPath = path.join(options.output, outputPath);
         }
     } catch (e) {
         winston.error(e);
-        throw new Error("Could not parse the uglify option");
+        throw new Error("Could not parse the output option");
     }
 
     // Create new generator object with settings
     const generator = new PackhostGenerator({
         projectRootPath,
+        outputPath
     });
 
     // Attempt to generate the project
@@ -122,6 +123,7 @@ async function pack(name: string, options: any) {
         throw new Error("Could not generate project");
     }
 
+    winston.info(outputPath);
     // Webpack
     try {
         winston.info("Webpacking project");

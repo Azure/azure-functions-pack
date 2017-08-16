@@ -6,10 +6,11 @@
   "repository": "https://github.com/christopheranderson/azure-functions-pack",
   "author": "christopheranderson",
   "bin": {
-    "funcpack":"./lib/main.js"
+    "funcpack": "./lib/main.js"
   },
   "keywords": [
-    "azure-functions","webpack"
+    "azure-functions",
+    "webpack"
   ],
   "files": [
     "lib"
