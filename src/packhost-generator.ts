@@ -125,10 +125,10 @@ export class PackhostGenerator {
     private async createHostFile() {
         debug("Generating host file");
         const exportStrings: string[] = [];
-        
+
         const outputDirPath = path.join(this.options.projectRootPath, this.options.outputPath);
         const rootRelPath = path.relative(outputDirPath, this.options.projectRootPath).replace(/\\/g, '/')
-        
+
         for (const [name, fx] of this.functionsMap) {
             const fxvar = this.safeFunctionName(fx.name);
             let exportStmt = `    "${fxvar}": require("${rootRelPath}/${fx.name}/${fx._originalScriptFile}")`;
@@ -160,7 +160,7 @@ export class PackhostGenerator {
             // TODO: This way of keeping track of the original settings is hacky
             fxJson._originalEntryPoint = fx._originalEntryPoint;
             fxJson._originalScriptFile = fx._originalScriptFile;
-            fxJson.scriptFile = `../${this.options.outputPath}/${this.options.indexFileName}`;
+            fxJson.scriptFile = `../.funcpack/${this.options.indexFileName}`;
             fxJson.entryPoint = fxvar;
             await FileHelper.overwriteFileUtf8(fxJsonPath, JSON.stringify(fxJson, null, " "));
         }
