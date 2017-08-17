@@ -85,7 +85,7 @@ export class PackhostGenerator {
                     directory: dir,
                 });
                 return null;
-                //throw new Error(`Function ${name} does not have a valid start file`);
+                // throw new Error(`Function ${name} does not have a valid start file`);
             }
             originalScriptFile = scriptFile;
         }
@@ -127,7 +127,7 @@ export class PackhostGenerator {
         const exportStrings: string[] = [];
 
         const outputDirPath = path.join(this.options.projectRootPath, this.options.outputPath);
-        const rootRelPath = path.relative(outputDirPath, this.options.projectRootPath).replace(/\\/g, '/')
+        const rootRelPath = path.relative(outputDirPath, this.options.projectRootPath).replace(/\\/g, "/");
 
         for (const [name, fx] of this.functionsMap) {
             const fxvar = this.safeFunctionName(fx.name);

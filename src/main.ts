@@ -111,7 +111,7 @@ async function pack(name: string, options: any) {
     // Create new generator object with settings
     const generator = new PackhostGenerator({
         projectRootPath,
-        outputPath
+        outputPath,
     });
 
     // Attempt to generate the project
