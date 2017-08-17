@@ -127,7 +127,8 @@ export class PackhostGenerator {
         const exportStrings: string[] = [];
 
         const outputDirPath = path.join(this.options.projectRootPath, this.options.outputPath);
-        const rootRelPath = path.relative(outputDirPath, this.options.projectRootPath).replace(/\\/g, "/");
+        const relPath = path.relative(outputDirPath, this.options.projectRootPath);
+        const rootRelPath = (path.sep === "\\") ? relPath.replace(/\\/g, "/") : relPath;
 
         for (const [name, fx] of this.functionsMap) {
             const fxvar = this.safeFunctionName(fx.name);
