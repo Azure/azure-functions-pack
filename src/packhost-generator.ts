@@ -85,7 +85,7 @@ export class PackhostGenerator {
                     directory: dir,
                 });
                 return null;
-                //throw new Error(`Function ${name} does not have a valid start file`);
+                // throw new Error(`Function ${name} does not have a valid start file`);
             }
             originalScriptFile = scriptFile;
         }
@@ -103,11 +103,11 @@ export class PackhostGenerator {
 
         debug("Loaded function(%s) using entryPoint: %s - scriptFile: %s", name, scriptFile, entryPoint);
         return Promise.resolve({
-            name,
-            scriptFile,
-            entryPoint,
             _originalEntryPoint: originalEntryPoint,
             _originalScriptFile: originalScriptFile,
+            entryPoint,
+            name,
+            scriptFile,
         });
     }
 

@@ -8,7 +8,8 @@
     "preserveConstEnums": true,
     "removeComments": true,
     "target": "es6",
-    "sourceMap": true
+    "sourceMap": true,
+    "newLine": "LF"
   },
   "include": [
     "src/**/*"
