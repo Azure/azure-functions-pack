@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 
 import * as program from "commander";
 import * as path from "path";
@@ -126,10 +126,10 @@ async function pack(name: string, options: any) {
     try {
         winston.info("Webpacking project");
         await WebpackRunner.run({
+            ignoredModules: config.ignoredModules,
+            outputPath,
             projectRootPath,
             uglify,
-            outputPath,
-            ignoredModules: config.ignoredModules,
         });
     } catch (error) {
         winston.error(error);
