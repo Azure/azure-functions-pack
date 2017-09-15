@@ -3,7 +3,7 @@
   "version": "0.2.2",
   "description": "azure-functions-pack",
   "license": "MIT",
-  "repository": "https://github.com/christopheranderson/azure-functions-pack",
+  "repository": "https://github.com/Azure/azure-functions-pack",
   "author": "christopheranderson",
   "bin": {
     "funcpack": "./lib/main.js"
