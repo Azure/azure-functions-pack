@@ -30,7 +30,7 @@
     "commander": "~2.9.0",
     "debug": "~2.6.1",
     "rimraf": "~2.5.4",
-    "webpack": "fulls1z3/webpack#v2.2.1-harmony",
+    "webpack": "~3.0.0",
     "winston": "~2.3.1"
   },
   "devDependencies": {
@@ -40,7 +40,7 @@
     "@types/mocha": "2.2.41",
     "@types/node": "6.0.31",
     "@types/rimraf": "0.0.28",
-    "@types/webpack": "~2.2.5",
+    "@types/webpack": "~3.0.0",
     "@types/winston": "~2.2.0",
     "chai": "~3.5.0",
     "mocha": "~3.0.0",
