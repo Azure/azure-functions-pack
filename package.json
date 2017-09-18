@@ -1,10 +1,13 @@
 {
   "name": "azure-functions-pack",
-  "version": "0.2.2",
+  "version": "0.3.1",
   "description": "azure-functions-pack",
   "license": "MIT",
-  "repository": "https://github.com/christopheranderson/azure-functions-pack",
-  "author": "christopheranderson",
+  "repository": "https://github.com/Azure/azure-functions-pack",
+  "author": "Microsoft Corp.",
+  "contributors": [
+    "Chris Anderson <chrande@microsoft.com> (https://github.com/christopheranderson)"
+  ],
   "bin": {
     "funcpack": "./lib/main.js"
   },
@@ -30,7 +33,7 @@
     "commander": "~2.9.0",
     "debug": "~2.6.1",
     "rimraf": "~2.5.4",
-    "webpack": "~3.0.0",
+    "webpack": "~3.5.6",
     "winston": "~2.3.1"
   },
   "devDependencies": {
