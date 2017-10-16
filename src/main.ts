@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#!/usr/bin/env node 
 
 import * as program from "commander";
 import * as path from "path";
@@ -54,12 +54,12 @@ async function unpack(name: string, options: any) {
 
     let outputPath = ".funcpack";
     try {
-        if (options.path) {
-            outputPath = program.opts().path;
+        if (options.output) {
+            outputPath = path.join(options.output, outputPath);
         }
     } catch (e) {
         winston.error(e);
-        throw new Error("Could not parse the uglify option");
+        throw new Error("Could not parse the output option");
     }
 
     winston.info("Unpacking project at: " + projectRootPath);
@@ -101,12 +101,12 @@ async function pack(name: string, options: any) {
 
     let outputPath = ".funcpack";
     try {
-        if (options.path) {
-            outputPath = program.opts().path;
+        if (options.output) {
+            outputPath = path.join(options.output, outputPath);
         }
     } catch (e) {
         winston.error(e);
-        throw new Error("Could not parse the uglify option");
+        throw new Error("Could not parse the output option");
     }
 
     let copyToOutput = false;
@@ -123,6 +123,7 @@ async function pack(name: string, options: any) {
     const generator = new PackhostGenerator({
         copyToOutput,
         projectRootPath,
+        outputPath,
     });
 
     // Attempt to generate the project
