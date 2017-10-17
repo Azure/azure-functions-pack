@@ -18,4 +18,9 @@ WORKDIR /content
 COPY . ./
 RUN npm i
 
+WORKDIR /content/test/e2e/sample
+RUN npm i
+
+WORKDIR /content
+
 CMD ["npm", "run", "test"]
