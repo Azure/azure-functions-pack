@@ -2,6 +2,8 @@ coverage/
 node_modules/
 npm-debug.log
 
-lib
+/lib/*
+
+!test/e2e/sample/lib/*
 
 **/*.csv
