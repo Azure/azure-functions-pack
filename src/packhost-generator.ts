@@ -168,7 +168,7 @@ export class PackhostGenerator {
             // TODO: This way of keeping track of the original settings is hacky
             fxJson._originalEntryPoint = fx._originalEntryPoint;
             fxJson._originalScriptFile = fx._originalScriptFile;
-            fxJson.scriptFile = this.options.projectRootPath ?
+            fxJson.scriptFile = this.options.copyToOutput ?
                 `../${this.options.indexFileName}` :
                 `../${this.options.outputPath}/${this.options.indexFileName}`;
             fxJson.entryPoint = fxvar;

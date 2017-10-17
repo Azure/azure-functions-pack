@@ -1,4 +1,4 @@
-#!/usr/bin/env node 
+#!/usr/bin/env node
 
 import * as program from "commander";
 import * as path from "path";
@@ -122,8 +122,8 @@ async function pack(name: string, options: any) {
     // Create new generator object with settings
     const generator = new PackhostGenerator({
         copyToOutput,
-        projectRootPath,
         outputPath,
+        projectRootPath,
     });
 
     // Attempt to generate the project

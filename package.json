@@ -24,7 +24,7 @@
     "clean": "rimraf lib",
     "lint": "tslint -c tslint.json 'src/**/*.ts'",
     "build": "npm run clean && npm run lint && echo Using TypeScript && tsc --version && tsc --pretty",
-    "test": "npm run build && mocha --compilers ts:ts-node/register --recursive test/**/*-spec.ts",
+    "test": "npm run build && mocha --compilers ts:ts-node/register --recursive test/**/*.test.ts",
     "watch": "npm run build -- --watch",
     "watch:test": "npm run test -- --watch",
     "e2etst": "npm run "
@@ -47,10 +47,13 @@
     "@types/ncp": "^2.0.1",
     "@types/node": "6.0.31",
     "@types/rimraf": "0.0.28",
+    "@types/supertest": "^2.0.3",
     "@types/webpack": "~3.0.0",
     "@types/winston": "~2.2.0",
     "chai": "~3.5.0",
     "mocha": "~3.0.0",
+    "ps-node": "^0.1.6",
+    "supertest": "^3.0.0",
     "ts-node": "~1.0.0",
     "tslint": "~5.7.0",
     "typescript": "~2.2.0"
