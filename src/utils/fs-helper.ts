@@ -1,5 +1,10 @@
 import * as fs from "fs";
+import * as mkdirp from "mkdirp";
+import { ncp } from "ncp";
+import * as nodepath from "path";
 import * as rimraf from "rimraf";
+
+export type FilterCallBack = (name: string) => boolean;
 
 export class FileHelper {
     public static readdir(path: string): Promise<string[]> {
@@ -107,6 +112,40 @@ export class FileHelper {
                     return reject(err);
                 }
                 resolve();
+            });
+        });
+    }
+
+    public static cp(source: string, destination: string, filter?: RegExp | FilterCallBack): Promise<{}> {
+        const options: any = {};
+        options.clobber = true;
+        options.errs = process.stderr;
+        if (filter) {
+            options.filter = filter;
+        }
+
+        return new Promise(async (resolve, reject) => {
+            if (!await FileHelper.exists(nodepath.dirname(destination))) {
+                await FileHelper.mkdirp(nodepath.dirname(destination));
+            }
+
+            ncp(source, destination, options, (err) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve();
+            });
+        });
+
+    }
+
+    public static mkdirp(pathToCreate: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            mkdirp(pathToCreate, (err, made) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(made);
             });
         });
     }

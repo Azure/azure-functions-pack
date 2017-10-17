@@ -15,6 +15,7 @@ export class PackhostGenerator {
         this.options = options;
         this.options.indexFileName = this.options.indexFileName || "index.js";
         this.options.outputPath = this.options.outputPath || ".funcpack";
+        this.options.copyToOutput = this.options.copyToOutput || false;
         debug("Created new PackhostGenerator for project at: %s", this.options.projectRootPath);
     }
 
@@ -85,13 +86,13 @@ export class PackhostGenerator {
                     directory: dir,
                 });
                 return null;
-                //throw new Error(`Function ${name} does not have a valid start file`);
+                // throw new Error(`Function ${name} does not have a valid start file`);
             }
             originalScriptFile = scriptFile;
         }
 
-         // TODO: improve the logic for choosing entry point - failure sure not all scenarios are covered here.
-         // TODO: Have to overwrite this entryPoint later on. Using temporary setting for now.
+        // TODO: improve the logic for choosing entry point - failure sure not all scenarios are covered here.
+        // TODO: Have to overwrite this entryPoint later on. Using temporary setting for now.
         if (fxJson._originalEntryPoint) {
             debug("Found originalEntryPoint setting: %s", fxJson._originalEntryPoint);
             entryPoint = fxJson._originalEntryPoint;
@@ -103,11 +104,11 @@ export class PackhostGenerator {
 
         debug("Loaded function(%s) using entryPoint: %s - scriptFile: %s", name, scriptFile, entryPoint);
         return Promise.resolve({
-            name,
-            scriptFile,
-            entryPoint,
             _originalEntryPoint: originalEntryPoint,
             _originalScriptFile: originalScriptFile,
+            entryPoint,
+            name,
+            scriptFile,
         });
     }
 
@@ -126,9 +127,13 @@ export class PackhostGenerator {
         debug("Generating host file");
         const exportStrings: string[] = [];
 
+        const outputDirPath = path.join(this.options.projectRootPath, this.options.outputPath);
+        const relPath = path.relative(outputDirPath, this.options.projectRootPath);
+        const rootRelPath = (path.sep === "\\") ? relPath.replace(/\\/g, "/") : relPath;
+
         for (const [name, fx] of this.functionsMap) {
             const fxvar = this.safeFunctionName(fx.name);
-            let exportStmt = `    "${fxvar}": require("../${fx.name}/${fx._originalScriptFile}")`;
+            let exportStmt = `    "${fxvar}": require("${rootRelPath}/${fx.name}/${fx._originalScriptFile}")`;
             if (fx.entryPoint) {
                 exportStmt += `.${fx.entryPoint}`;
             }
@@ -150,15 +155,26 @@ export class PackhostGenerator {
         debug("Updating Function JSONS");
         for (const [name, fx] of this.functionsMap) {
             debug("Updating function(%s)", name);
-            const fxJsonPath = path.resolve(this.options.projectRootPath, name, "function.json");
+            let fxJsonPath = path.resolve(this.options.projectRootPath, name, "function.json");
             const fxvar = this.safeFunctionName(fx.name);
             const fxJson = await FileHelper.readFileAsJSON(fxJsonPath);
+
+            if (this.options.copyToOutput) {
+                await FileHelper.cp(
+                    path.resolve(this.options.projectRootPath, name, "function.json")
+                    , path.resolve(this.options.projectRootPath, this.options.outputPath, name, "function.json"));
+            }
 
             // TODO: This way of keeping track of the original settings is hacky
             fxJson._originalEntryPoint = fx._originalEntryPoint;
             fxJson._originalScriptFile = fx._originalScriptFile;
-            fxJson.scriptFile = `../${this.options.outputPath}/${this.options.indexFileName}`;
+            fxJson.scriptFile = this.options.copyToOutput ?
+                `../${this.options.indexFileName}` :
+                `../${this.options.outputPath}/${this.options.indexFileName}`;
             fxJson.entryPoint = fxvar;
+            if (this.options.copyToOutput) {
+                fxJsonPath = path.resolve(this.options.projectRootPath, this.options.outputPath, name, "function.json");
+            }
             await FileHelper.overwriteFileUtf8(fxJsonPath, JSON.stringify(fxJson, null, " "));
         }
     }
@@ -172,6 +188,7 @@ export interface IPackhostGeneratorOptions {
     projectRootPath: string;
     outputPath?: string;
     indexFileName?: string;
+    copyToOutput?: boolean;
 }
 
 export interface IFxFunction {

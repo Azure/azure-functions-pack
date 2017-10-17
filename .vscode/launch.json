@@ -96,6 +96,27 @@
         },
         {
             "args": [
+                "pack","-c","./sample2"
+            ],
+            "cwd": "${workspaceRoot}",
+            "env": {
+            },
+            "name": "Pack (Copy to Output)",
+            "outFiles": [
+                "${workspaceRoot}/lib/**"
+            ],
+            "program": "${workspaceRoot}/src/main.ts",
+            "request": "launch",
+            "runtimeArgs": [
+                "--nolazy"
+            ],
+            "runtimeExecutable": null,
+            "sourceMaps": true,
+            "stopOnEntry": false,
+            "type": "node"
+        },
+        {
+            "args": [
                 "pack","./sample2","-u"
             ],
             "cwd": "${workspaceRoot}",

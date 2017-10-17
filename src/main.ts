@@ -1,4 +1,4 @@
-#! /usr/bin/env node
+#!/usr/bin/env node
 
 import * as program from "commander";
 import * as path from "path";
@@ -21,6 +21,7 @@ async function runCli() {
         .description("Will pack the specified path or the current directory if none is specified")
         .option("-u, --uglify", "Uglify the project when webpacking")
         .option("-o, --output <path>", "Path for output directory")
+        .option("-c, --copyToOutput", "Copy files to output directory")
         .action(pack);
 
     p.command("*", null, { noHelp: true, isDefault: true })
@@ -53,12 +54,12 @@ async function unpack(name: string, options: any) {
 
     let outputPath = ".funcpack";
     try {
-        if (options.path) {
-            outputPath = program.opts().path;
+        if (options.output) {
+            outputPath = path.join(options.output, outputPath);
         }
     } catch (e) {
         winston.error(e);
-        throw new Error("Could not parse the uglify option");
+        throw new Error("Could not parse the output option");
     }
 
     winston.info("Unpacking project at: " + projectRootPath);
@@ -100,16 +101,28 @@ async function pack(name: string, options: any) {
 
     let outputPath = ".funcpack";
     try {
-        if (options.path) {
-            outputPath = program.opts().path;
+        if (options.output) {
+            outputPath = path.join(options.output, outputPath);
         }
     } catch (e) {
         winston.error(e);
-        throw new Error("Could not parse the uglify option");
+        throw new Error("Could not parse the output option");
+    }
+
+    let copyToOutput = false;
+    try {
+        if (options.copyToOutput) {
+            copyToOutput = true;
+        }
+    } catch (e) {
+        winston.error(e);
+        throw new Error("Could not parse the copyToOutput option");
     }
 
     // Create new generator object with settings
     const generator = new PackhostGenerator({
+        copyToOutput,
+        outputPath,
         projectRootPath,
     });
 
@@ -126,10 +139,10 @@ async function pack(name: string, options: any) {
     try {
         winston.info("Webpacking project");
         await WebpackRunner.run({
+            ignoredModules: config.ignoredModules,
+            outputPath,
             projectRootPath,
             uglify,
-            outputPath,
-            ignoredModules: config.ignoredModules,
         });
     } catch (error) {
         winston.error(error);
