@@ -8,7 +8,7 @@ import { ConfigLoader, IFuncpackConfig } from "./utils";
 
 async function runCli() {
     const p = program
-        .version("0.2.2")
+        .version("0.4.0")
         .option("-d, --debug", "Emits debug messages");
 
     p.command("unpack <path>")
