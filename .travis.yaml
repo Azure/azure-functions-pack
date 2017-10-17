@@ -1,0 +1,13 @@
+language: node_js
+node_js:
+  - "8"
+before-script:
+  - curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.gpg
+  - sudo mv microsoft.gpg /etc/apt/trusted.gpg.d/microsoft.gpg
+  - sudo apt-get update
+  - sudo apt-get install dotnet-sdk-2.0.0
+  - npm i -g azure-functions-core-tools@core
+script: npm run test
+cache:
+  directories:
+    - "node_modules"
