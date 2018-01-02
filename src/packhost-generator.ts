@@ -41,6 +41,7 @@ export class PackhostGenerator {
 
     private async load() {
         const functions: string[] = (await FileHelper.readdir(this.options.projectRootPath))
+            // tslint:disable-next-line:arrow-parens
             .filter(async (item) =>
                 (await FileHelper.stat(path.resolve(this.options.projectRootPath, item))).isDirectory());
         debug("Found these directories in project root: %s", functions.join(", "));
