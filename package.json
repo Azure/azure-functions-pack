@@ -49,7 +49,7 @@
     "mocha": "~3.0.0",
     "ts-node": "~1.0.0",
     "tslint": "~4.0.0",
-    "typescript": "~2.2.0"
+    "typescript": "~2.4.0"
   },
   "engines": {
     "node": ">=6.5.0"
