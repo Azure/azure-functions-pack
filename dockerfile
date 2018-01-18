@@ -11,7 +11,6 @@ COPY sshd_config /etc/ssh
 RUN mkdir -p /home/.azurefunctions/bin
 
 RUN npm i -g azure-functions-core-tools@core --unsafe-perm
-RUN mv /home/.azurefunctions/bin/workers/node /home/.azurefunctions/bin/workers/Node
 
 WORKDIR /content
 
