@@ -62,6 +62,7 @@ export class FileHelper {
 
     public static overwriteFileUtf8(path: string, content: string): Promise<any> {
         return new Promise((resolve, reject) => {
+            // tslint:disable-next-line:arrow-parens
             fs.truncate(path, async (err) => {
                 if (err) {
                     return reject(err);
