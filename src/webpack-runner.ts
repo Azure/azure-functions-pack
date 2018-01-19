@@ -49,7 +49,9 @@ export class WebpackRunner {
                     libraryTarget: "commonjs2",
                     path: path.join(options.projectRootPath, options.outputPath),
                 },
-                plugins: [],
+                plugins: [
+                    new webpack.DefinePlugin({ "global.GENTLY": false }),
+                ],
                 target: "node",
             };
 
