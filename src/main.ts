@@ -22,7 +22,7 @@ async function runCli() {
         .option("-u, --uglify", "Uglify the project when webpacking")
         .option("-o, --output <path>", "Path for output directory")
         .option("-c, --copyToOutput", "Copy files to output directory")
-        .option("-e, --editConfig <path>", "Customize webpack config by applying function exported in this file")
+        .option("-e, --editConfig <path>", "Customize webpack config by applying function in this file")
         .action(pack);
 
     p.command("*", null, { noHelp: true, isDefault: true })

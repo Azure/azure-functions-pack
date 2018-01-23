@@ -82,9 +82,22 @@ Usage: pack [options] <path>
 
   Options:
 
-    -h, --help           output usage information
-    -u, --uglify         Uglify the project when webpacking
-    -o, --output <path>  Path for output directory
+    -h, --help               output usage information
+    -u, --uglify             Uglify the project when webpacking
+    -o, --output <path>      Path for output directory
+    -c, --copyToOutput       Copy files to output directory
+    -e, --editConfig <path>  Customize webpack config by applying function in this file
+```
+
+The `editConfig` option will let you specify a js file containing a function to alter the webpack configuration.
+
+```
+// $root/webpack.config.js
+
+module.exports = function(config, webpack) {
+    config.plugins.push(new webpack.DefinePlugin({ "global.GENTLY": false }));
+    return config;
+}
 ```
 
 ### funcpack.config.json
