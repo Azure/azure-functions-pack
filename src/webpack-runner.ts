@@ -40,7 +40,7 @@ export class WebpackRunner {
             }
 
             debug("Creating Webpack Configuration");
-            const config: webpack.Configuration = {
+            let config: webpack.Configuration = {
                 entry: packHostPath,
                 externals: ignoredModules,
                 node: {
