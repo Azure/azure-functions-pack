@@ -20,6 +20,7 @@ async function runCli() {
     p.command("pack <path>")
         .description("Will pack the specified path or the current directory if none is specified")
         .option("-u, --uglify", "Uglify the project when webpacking")
+        .option("-w, --watch", "Run in watch mode to support local development with 'func host'")
         .option("-o, --output <path>", "Path for output directory")
         .option("-c, --copyToOutput", "Copy files to output directory")
         .option("-e, --editConfig <path>", "Customize webpack config by applying function in this file")
@@ -90,6 +91,16 @@ async function pack(name: string, options: any) {
         throw new Error("Could not determine route");
     }
 
+    let watch = false;
+    try {
+        if (options.watch) {
+            watch = true;
+        }
+    } catch (e) {
+        winston.error(e);
+        throw new Error("Could not parse the watch option");
+    }
+
     let uglify = false;
     try {
         if (options.uglify) {
@@ -145,14 +156,17 @@ async function pack(name: string, options: any) {
             outputPath,
             projectRootPath,
             uglify,
+            watch,
         });
     } catch (error) {
         winston.error(error);
         throw new Error("Could not webpack project");
     }
 
-    winston.info("Complete!");
-    process.exit(0);
+    if (!watch) {
+        winston.info("Complete!");
+        process.exit(0);
+    }
 }
 
 runCli();
