@@ -42,10 +42,19 @@ Usage: main [options] [command]
 
   Options:
 
-    -h, --help     output usage information
-    -V, --version  output the version number
-    -d, --debug    Emits debug messages
+    -h, --help           output usage information
+    -u, --uglify         Uglify the project when webpacking
+    -o, --output <path>  Path for output directory
+    -c, --copyToOutput   Copy files to output directory
 ```
+
+The `copyToOutput` option will copy all the important files for you to the `output` directory (aka `.funcpack`) and modify them there. This will let you publish from the `output` directory without having to touch your source code or remove your `node_modules` to save space. You can simply:
+
+```
+funcpack pack -c .
+cd .funcpack
+func azure functionapp publish <myapp>
+``` 
 
 ### unpack
 
@@ -73,9 +82,22 @@ Usage: pack [options] <path>
 
   Options:
 
-    -h, --help           output usage information
-    -u, --uglify         Uglify the project when webpacking
-    -o, --output <path>  Path for output directory
+    -h, --help               output usage information
+    -u, --uglify             Uglify the project when webpacking
+    -o, --output <path>      Path for output directory
+    -c, --copyToOutput       Copy files to output directory
+    -e, --editConfig <path>  Customize webpack config by applying function in this file
+```
+
+The `editConfig` option will let you specify a js file containing a function to alter the webpack configuration.
+
+```
+// $root/webpack.config.js
+
+module.exports = function(config, webpack) {
+    config.plugins.push(new webpack.DefinePlugin({ "global.GENTLY": false }));
+    return config;
+}
 ```
 
 ### funcpack.config.json
