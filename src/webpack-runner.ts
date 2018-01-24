@@ -10,8 +10,10 @@ const debug = debugLib("azure-functions-pack:WebpackRunner");
 export interface IWebpackRunner {
     projectRootPath: string;
     indexFileName?: string;
+    packHostIndexFileName?: string;
     outputPath?: string;
     uglify?: boolean;
+    watch?: boolean;
     ignoredModules?: string[];
     editConfig?: string;
 }
@@ -19,17 +21,17 @@ export interface IWebpackRunner {
 export class WebpackRunner {
     public static run(options: IWebpackRunner): Promise<any> {
         options.indexFileName = options.indexFileName || "index.js";
+        options.packHostIndexFileName = options.packHostIndexFileName || "index.gen.js";
         options.outputPath = options.outputPath || ".funcpack";
         options.uglify = options.uglify || false;
+        options.watch = options.watch || false;
         options.ignoredModules = options.ignoredModules || [];
 
         return new Promise(async (resolve, reject) => {
             debug("Setting up paths");
-            const oldPath = path.join(options.projectRootPath, options.outputPath, options.indexFileName);
-            const newPath = path.join(options.projectRootPath,
-                options.outputPath, "original." + options.indexFileName);
-
-            const outputPath = path.join(options.projectRootPath, options.outputPath, "output.js");
+            const indexPath = path.join(options.projectRootPath, options.outputPath, options.indexFileName);
+            const packHostPath = path.join(options.projectRootPath,
+                options.outputPath, options.packHostIndexFileName);
 
             const ignoredModules: { [key: string]: string } = {};
 
@@ -39,20 +41,21 @@ export class WebpackRunner {
 
             debug("Creating Webpack Configuration");
             let config: webpack.Configuration = {
-                entry: oldPath,
+                entry: packHostPath,
                 externals: ignoredModules,
                 node: {
                     __dirname: false,
                     __filename: false,
                 },
                 output: {
-                    filename: "output.js",
+                    filename: options.indexFileName,
                     library: "index",
                     libraryTarget: "commonjs2",
                     path: path.join(options.projectRootPath, options.outputPath),
                 },
                 plugins: [],
                 target: "node",
+                watch: options.watch,
             };
 
             if (options.uglify) {
@@ -78,23 +81,26 @@ export class WebpackRunner {
             debug("Creating Webpack instance");
             const compiler = webpack(config);
             debug("Started webpack");
-            compiler.run(async (err, stats) => {
-                debug("Webpack finished");
-                if (err || stats.hasErrors()) {
-                    return reject(err || stats.toString({ errors: true }));
-                }
-                debug("\n" + stats.toString());
 
-                debug("Saving the original the entry file: %s -> %s", oldPath, newPath);
-                if (await FileHelper.exists(newPath)) {
-                    await FileHelper.rimraf(newPath);
-                }
-                await FileHelper.rename(oldPath, newPath);
+            if (options.watch) {
+                compiler.watch(null, async (err, stats) => {
+                    debug("Webpack recompile");
+                    if (err || stats.hasErrors()) {
+                        return reject(err || stats.toString({ errors: true }));
+                    }
+                    debug("\n" + stats.toString());
+                });
+            } else {
+                compiler.run(async (err, stats) => {
+                    debug("Webpack finished");
+                    if (err || stats.hasErrors()) {
+                        return reject(err || stats.toString({ errors: true }));
+                    }
+                    debug("\n" + stats.toString());
 
-                debug("Renaming the output file");
-                await FileHelper.rename(outputPath, oldPath);
-                resolve();
-            });
+                    resolve();
+                });
+            }
         });
     }
 }

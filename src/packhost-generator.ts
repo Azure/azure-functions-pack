@@ -14,6 +14,7 @@ export class PackhostGenerator {
     constructor(options: IPackhostGeneratorOptions) {
         this.options = options;
         this.options.indexFileName = this.options.indexFileName || "index.js";
+        this.options.packHostIndexFileName = this.options.packHostIndexFileName || "index.gen.js";
         this.options.outputPath = this.options.outputPath || ".funcpack";
         this.options.copyToOutput = this.options.copyToOutput || false;
         debug("Created new PackhostGenerator for project at: %s", this.options.projectRootPath);
@@ -40,6 +41,7 @@ export class PackhostGenerator {
 
     private async load() {
         const functions: string[] = (await FileHelper.readdir(this.options.projectRootPath))
+            // tslint:disable-next-line:arrow-parens
             .filter(async (item) =>
                 (await FileHelper.stat(path.resolve(this.options.projectRootPath, item))).isDirectory());
         debug("Found these directories in project root: %s", functions.join(", "));
@@ -147,7 +149,7 @@ export class PackhostGenerator {
 
         debug("Writing contents to host file");
         await FileHelper.writeFileUtf8(
-            path.join(this.options.projectRootPath, this.options.outputPath, this.options.indexFileName),
+            path.join(this.options.projectRootPath, this.options.outputPath, this.options.packHostIndexFileName),
             exportString);
     }
 
@@ -189,6 +191,7 @@ export interface IPackhostGeneratorOptions {
     outputPath?: string;
     indexFileName?: string;
     copyToOutput?: boolean;
+    packHostIndexFileName?: string;
 }
 
 export interface IFxFunction {
