@@ -10,8 +10,6 @@ Whenever an Azure Function App is recreated on demand (a so called "cold start")
 
 A javascript module bundler (webpack) is used to place all the modules in a single file. The Function `functions.json` files are then modified so this bundle is used rather than the separate modules files. Magic!
 
-:construction: This project is experimental; use with caution and be prepared for breaking changes :construction:
-
 ## How to run
 
 In the Function App directory:
