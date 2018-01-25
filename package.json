@@ -1,6 +1,6 @@
 {
   "name": "azure-functions-pack",
-  "version": "0.4.1",
+  "version": "1.0.0",
   "description": "azure-functions-pack",
   "license": "MIT",
   "repository": "https://github.com/Azure/azure-functions-pack",
