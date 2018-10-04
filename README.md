@@ -1,3 +1,6 @@
+# NOTE: This repository is no longer actively maintained
+ This tool has been replaced with [Run From Package](https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package)
+
 # Azure Functions Pack
 
 This is a tool to make it easy to package your Azure Functions Node.js Functions for optimal performance on Azure Functions.
