@@ -1,5 +1,7 @@
 # NOTE: This repository is no longer actively maintained
- This tool has been replaced with [Run From Package](https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package)
+This tool has been replaced with [Run From Package](https://docs.microsoft.com/en-us/azure/azure-functions/run-functions-from-deployment-package).
+
+Azure Functions Pack was created to address significant cold start delays incurred by slow file read operations (read "The problem addressed" below). Azure Functions Pack reduces file read operation delays by condensing everything into one file. Run From Package addresses this same problem by keeping files as one payload and using a virtual file system that is much faster than the slower file system used by default. Run From Package works with function apps written in all languages and includes other benefits (such as atomicity, predictability, and faster deployment). You can read more about the benefits of Run From Package [here](https://github.com/Azure/app-service-announcements/issues/84), and you can read more about deploying with Run From Package [here](https://docs.microsoft.com/azure/azure-functions/run-functions-from-deployment-package). If you are already using [Zip deployment for Azure Functions](https://docs.microsoft.com/azure/azure-functions/deployment-zip-push), it's only a matter of adding `WEBSITE_RUN_FROM_PACKAGE = 1` to your App Settings.
 
 # Azure Functions Pack
 
