@@ -33,7 +33,7 @@ You can set the `SCM_USE_FUNCPACK` app setting to 1, and we'll install your pack
 ## API
 
 ```
-Usage: main [options] [command]
+Usage: funcpack [options] [command]
 
 
   Commands:
