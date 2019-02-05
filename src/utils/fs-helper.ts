@@ -75,11 +75,25 @@ export class FileHelper {
 
     public static writeFileUtf8(path: string, content: string): Promise<any> {
         return new Promise((resolve, reject) => {
+            // after generating the file forward date the modified TimeStamp
+            // This gets around webpack watcher back dating its directory file watcher.
+            // Without this the watcher was executing continously for
+            // DirectoryWatcher.FS_ACCURACY / WatchOptions.aggregateTimeout times
             fs.writeFile(path, content, (err) => {
                 if (err) {
                     return reject(err);
                 }
-                resolve();
+                fs.stat(path, (err1, stats) => {
+                    if (err1) {
+                        return reject(err);
+                    }
+                    fs.utimes(path, stats.atime, new Date(stats.mtime.getMilliseconds() + 10000), (err2) => {
+                        if (err2) {
+                            return reject(err);
+                        }
+                        resolve();
+                    });
+                });
             });
         });
     }
