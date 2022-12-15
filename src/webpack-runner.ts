@@ -83,11 +83,12 @@ export class WebpackRunner {
             debug("Started webpack");
 
             if (options.watch) {
-                compiler.watch(null, async (err, stats) => {
+                compiler.watch(null, (err, stats) => {
                     debug("Webpack recompile");
                     if (err || stats.hasErrors()) {
                         return reject(err || stats.toString({ errors: true }));
                     }
+                    winston.info("Webpack compiled successfully. Watching for changes.");
                     debug("\n" + stats.toString());
                 });
             } else {
